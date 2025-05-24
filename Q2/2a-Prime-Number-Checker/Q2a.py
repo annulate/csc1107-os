@@ -11,6 +11,7 @@ def checking_for_prime(usernum):
         else:
             print(f"Yes, the keyed in number {usernum} is a prime number.")
 
+try:
     usernum = int(input("Enter a number: "))
     checking_for_prime(usernum)
 except ValueError:
