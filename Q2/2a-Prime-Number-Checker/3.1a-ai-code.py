@@ -1,0 +1,22 @@
+# Task 3.1: Check user input for prime number (AI-generated)
+
+def is_prime(n):
+    if n <= 1:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+        if n % i == 0:
+            return False
+    return True
+
+# Main program
+try:
+    num = int(input("Enter a number: "))
+    if is_prime(num):
+        print(f"The keyed-in number {num} is a prime number.")
+    else:
+        print(f"The keyed-in number {num} is not a prime number.")
+except ValueError:
+    print("Invalid input. Please enter an integer.")
