@@ -1,4 +1,5 @@
-#Task 3.1: Check user input for prime number (Self-developed)
+#3.1c selfdev-code.py
+#Function to check if a number is prime (self-developed)
 
 def checking_for_prime(usernum):
     if usernum <= 1:
