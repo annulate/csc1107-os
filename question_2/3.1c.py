@@ -1,9 +1,5 @@
-<<<<<<<< Updated upstream:question_2/3.1c-selfdev-code.py
-#3.1c selfdev-code.py
-#Function to check if a number is prime (self-developed)
-========
-#Task 3.1: Check user input for prime number (Self-developed Python Code)
->>>>>>>> Stashed changes:question_2/3.1c.py
+#Task 3.1c: Check user input for prime number (Self-developed Python Code)
+
 
 def checking_for_prime(usernum):
     if usernum <= 1:

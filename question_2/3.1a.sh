@@ -1,15 +1,14 @@
 #!/bin/bash
+#Task 3.1a: Check user input for prime number (Self-generated Bash Shell Script)
 
-# 3.1a-selfdev-code.sh
-# Function to check if a number is prime (self-developed)
+checking_for_prime() {
+    local usernum=$1
 
-checking_for_prime(){
-    usernum=$1
-    if [ $usernum -le 1 ]; then
+    if ((usernum <= 1)); then
         echo "The keyed in number $usernum is NOT a prime number."
     else
-        for (( x=2; x<usernum; x++ )); do
-            if [ $(( usernum % x )) -eq 0 ]; then
+        for ((x = 2; x < usernum; x++)); do
+            if ((usernum % x == 0)); then
                 echo "The keyed in number $usernum is NOT a prime number."
                 return
             fi
@@ -18,6 +17,11 @@ checking_for_prime(){
     fi
 }
 
-#read input and check if it is prime
+
 read -p "Enter a number: " usernum
-checking_for_prime $usernum
+
+if [[ $usernum =~ ^-?[0-9]+$ ]]; then
+    checking_for_prime $usernum
+else
+    echo "Please enter an integer!"
+fi

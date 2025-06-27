@@ -1,9 +1,4 @@
-<<<<<<<< Updated upstream:question_2/3.1d-ai-code.py
-# 3.1d ai-code.py
-# Function to check if a number is prime (ai-generated)
-========
-# Task 3.1d: Check user input for prime number (AI-generated Python code)
->>>>>>>> Stashed changes:question_2/3.1d.py
+# Task 3.1d: Check user input for prime number (GenAI-generated Python code)
 
 def is_prime(n):
     if n <= 1:

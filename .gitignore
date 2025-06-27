@@ -1,0 +1,5 @@
+*.o
+*.a
+*.elf
+*.d
+flash_demo/flash_demo

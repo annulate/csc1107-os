@@ -1,25 +1,32 @@
 #!/bin/bash
+#Task 3.1b: Check user input for prime number (GenAI-generated Bash Shell Script)
 
-# 3.1b-ai-code.sh
-# Function to check if a number is prime (ai-generated)
-
+# Function to check if a number is prime
 is_prime() {
-    local num=$1
-    if ((num <= 1)); then
-        echo "$num is not prime"
-        return
+    local n=$1
+    if ((n <= 1)); then
+        return 1
     fi
-    for ((i = 2; i * i <= num; i++)); do
-        if ((num % i == 0)); then
-            echo "$num is not prime"
-            return
+    if ((n == 2)); then
+        return 0
+    fi
+    if ((n % 2 == 0)); then
+        return 1
+    fi
+    for ((i = 3; i * i <= n; i += 2)); do
+        if ((n % i == 0)); then
+            return 1
         fi
     done
-    echo "$num is prime"
+    return 0
 }
 
-# Read input from user
-read -p "Enter a number: " number
+# Prompt user for input
+read -p "Enter a number: " num
 
-# Check if the number is prime
-is_prime $number
+# Call function and check if prime
+if is_prime $num; then
+    echo "The keyed-in number $num is a prime number."
+else
+    echo "The keyed-in number $num is not a prime number."
+fi
