@@ -4,7 +4,7 @@
 checking_for_prime() {
     local usernum=$1
 
-    if ((usernum <= 1)); then
+    if ((usernum == 0)) || ((usernum == 1)); then
         echo "The keyed in number $usernum is NOT a prime number."
     else
         for ((x = 2; x < usernum; x++)); do
@@ -16,7 +16,6 @@ checking_for_prime() {
         echo "The keyed in number $usernum is a prime number."
     fi
 }
-
 
 read -p "Enter a number: " usernum
 

@@ -1,8 +1,7 @@
 #Task 3.1c: Check user input for prime number (Self-developed Python Code)
 
-
 def checking_for_prime(usernum):
-    if usernum <= 1:
+    if usernum == 0 or usernum == 1:
         print("The keyed in number", usernum ,"is NOT a prime number.")
     else:
         for x in range (2, usernum):
