@@ -1,0 +1,8 @@
+# flash_demo build artefacts
+*.o
+*.ko
+*.mod
+*.order
+*.symvers
+*.d
+flash_cli    

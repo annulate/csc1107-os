@@ -1,84 +1,121 @@
+#include <linux/init.h>
 #include <linux/module.h>
-#include <linux/usb.h>
-#include <linux/fs.h>
+#include <linux/kernel.h>        /* min()/max(), pr_info(), etc.            */
 #include <linux/miscdevice.h>
-#include <linux/uaccess.h>
+#include <linux/fs.h>            /* struct file_operations                  */
+#include <linux/uaccess.h>       /* copy_to_user / copy_from_user           */
+#include <linux/usb.h>           /* notifier for USB hot-plug               */
 
-#define BUF_LEN 64
-static char kernel_buf[BUF_LEN] = "Hello World from kernel space\n";
+#define DRV_NAME     "flash_demo"
+#define KBUF_SIZE    128         /* buffer for user -> kernel message       */
 
-static ssize_t flash_read(struct file *f, char __user *out, size_t len, loff_t *off)
+static char kbuf[KBUF_SIZE];     /* last string written from user space     */
+
+/* -------------------------------------------------------------------- */
+/*  read() – returns a fixed greeting once per open()                    */
+
+static ssize_t flash_read(struct file *filp, char __user *ubuf,
+                          size_t len, loff_t *ppos)
 {
-    if (*off > 0) return 0;                    /* EOF after first read             */
-    if (len > strlen(kernel_buf)) len = strlen(kernel_buf);
-    if (copy_to_user(out, kernel_buf, len)) return -EFAULT;
-    *off += len;
-    return len;
+        const char reply[] = "Hello World from the kernel space\n";
+        size_t rlen = sizeof(reply);
+
+        if (*ppos)                       /* already read once → EOF        */
+                return 0;
+
+        if (len < rlen)                  /* user buffer too small          */
+                return -EINVAL;
+
+        if (copy_to_user(ubuf, reply, rlen))
+                return -EFAULT;
+
+        *ppos += rlen;
+        return rlen;
 }
 
-static ssize_t flash_write(struct file *f, const char __user *in, size_t len, loff_t *off)
+/* -------------------------------------------------------------------- */
+/*  write() – copy string from user and log it                           */
+
+static ssize_t flash_write(struct file *filp, const char __user *ubuf,
+                           size_t len, loff_t *ppos)
 {
-    if (len > BUF_LEN - 1) len = BUF_LEN - 1;
-    if (copy_from_user(kernel_buf, in, len)) return -EFAULT;
-    kernel_buf[len] = '\0';
-    pr_info("[flash_demo] got from user: %s", kernel_buf);
-    return len;
+        size_t cpylen = len < (KBUF_SIZE - 1) ? len : (KBUF_SIZE - 1);
+
+        if (copy_from_user(kbuf, ubuf, cpylen))
+                return -EFAULT;
+
+        kbuf[cpylen] = '\0';
+        pr_info("[%s] user wrote: %s", DRV_NAME, kbuf);
+
+        return len;                      /* report all bytes “consumed”    */
 }
+
+/* -------------------------------------------------------------------- */
+/*  file-ops table                                                       */
 
 static const struct file_operations flash_fops = {
-    .owner  = THIS_MODULE,
-    .read   = flash_read,
-    .write  = flash_write,
+        .owner  = THIS_MODULE,
+        .read   = flash_read,
+        .write  = flash_write,
 };
+
+/* -------------------------------------------------------------------- */
+/*  misc device registration                                             */
 
 static struct miscdevice flash_dev = {
-    .minor = MISC_DYNAMIC_MINOR,
-    .name  = "flash_demo",
-    .fops  = &flash_fops,
+        .minor = MISC_DYNAMIC_MINOR,
+        .name  = DRV_NAME,
+        .fops  = &flash_fops,
+        .mode  = 0666               /* world R/W for easy testing           */
 };
 
-static int flash_notify(struct notifier_block *nb, unsigned long action, void *data)
+/* -------------------------------------------------------------------- */
+/*  USB hot-plug notifier                                                */
+
+static int flash_usb_cb(struct notifier_block *nb,
+                        unsigned long action, void *data)
 {
-    struct usb_device *udev = data;
+        if (action == USB_DEVICE_ADD)
+                pr_info("[%s] USB device plugged in\n", DRV_NAME);
+        else if (action == USB_DEVICE_REMOVE)
+                pr_info("[%s] USB device removed\n", DRV_NAME);
 
-    const char *drv = udev->dev.driver ? udev->dev.driver->name : "none";
-    pr_info("flash_demo: event %lu, dev-class 0x%02x, driver=%s\n",
-        action,
-        udev->descriptor.bDeviceClass,
-        drv);
-
-    switch (action) {
-    case USB_DEVICE_ADD:
-        pr_info("[flash_demo] ========== USB flash inserted, misc device ready ==========");
-        break;
-    case USB_DEVICE_REMOVE:
-        pr_info("\n\n[flash_demo] ========== USB flash removed ==========\n\n");
-        break;
-    }
-    return NOTIFY_OK;
+        return NOTIFY_OK;
 }
 
-static struct notifier_block flash_nb = { .notifier_call = flash_notify };
+static struct notifier_block flash_nb = {
+        .notifier_call = flash_usb_cb,
+};
+
+/* -------------------------------------------------------------------- */
+/*  module init / exit                                                   */
 
 static int __init flash_init(void)
 {
-    int ret;
-    ret = misc_register(&flash_dev);
-    if (ret) return ret;
-    usb_register_notify(&flash_nb);
-    pr_info("[flash_demo] loaded");
-    return 0;
+        int ret;
+
+        ret = misc_register(&flash_dev);
+        if (ret) {
+                pr_err("[%s] misc_register failed: %d\n", DRV_NAME, ret);
+                return ret;
+        }
+
+        usb_register_notify(&flash_nb);
+        pr_info("[%s] loaded – device /dev/%s ready\n", DRV_NAME, DRV_NAME);
+        return 0;
 }
 
 static void __exit flash_exit(void)
 {
-    usb_unregister_notify(&flash_nb);
-    misc_deregister(&flash_dev);
-    pr_info("[flash_demo] unloaded");
+        usb_unregister_notify(&flash_nb);
+        misc_deregister(&flash_dev);
+        pr_info("[%s] unloaded\n", DRV_NAME);
 }
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Your-Name");
-MODULE_DESCRIPTION("USB flash hello-world demo");
+MODULE_AUTHOR("Your Name <you@example.com>");
+MODULE_DESCRIPTION("Kernel/user USB demo – CSC1107");
+MODULE_VERSION("1.1");
+
 module_init(flash_init);
 module_exit(flash_exit);
