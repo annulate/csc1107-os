@@ -1,18 +1,29 @@
+/* flash_demo.c  –  kernel ↔ user demo for Raspberry Pi USB hot-plug
+ *
+ * Features
+ *   • Logs USB add/remove events.
+ *   • Misc character device /dev/flash_demo :
+ *       - write()  echoes user string into dmesg.
+ *       - read()   returns “Hello World from the kernel space” and
+ *                  logs that reply to dmesg.
+ *   • GPL-licensed, single source file, heavily commented for clarity.
+ */
+
 #include <linux/init.h>
 #include <linux/module.h>
-#include <linux/kernel.h>        /* min()/max(), pr_info(), etc.            */
+#include <linux/kernel.h>        /* pr_info(), etc.                       */
 #include <linux/miscdevice.h>
-#include <linux/fs.h>            /* struct file_operations                  */
-#include <linux/uaccess.h>       /* copy_to_user / copy_from_user           */
-#include <linux/usb.h>           /* notifier for USB hot-plug               */
+#include <linux/fs.h>            /* struct file_operations                */
+#include <linux/uaccess.h>       /* copy_to_user / copy_from_user         */
+#include <linux/usb.h>           /* notifier for USB hot-plug             */
 
-#define DRV_NAME     "flash_demo"
-#define KBUF_SIZE    128         /* buffer for user -> kernel message       */
+#define DRV_NAME   "flash_demo"
+#define KBUF_SIZE  128           /* buffer for user -> kernel message     */
 
-static char kbuf[KBUF_SIZE];     /* last string written from user space     */
+static char kbuf[KBUF_SIZE];     /* last string written from user space   */
 
 /* -------------------------------------------------------------------- */
-/*  read() – returns a fixed greeting once per open()                    */
+/*  read() – returns a fixed greeting once per open() and logs reply     */
 
 static ssize_t flash_read(struct file *filp, char __user *ubuf,
                           size_t len, loff_t *ppos)
@@ -28,6 +39,8 @@ static ssize_t flash_read(struct file *filp, char __user *ubuf,
 
         if (copy_to_user(ubuf, reply, rlen))
                 return -EFAULT;
+
+        pr_info("[%s] kernel replied: %s", DRV_NAME, reply);  /* NEW LOG */
 
         *ppos += rlen;
         return rlen;
@@ -66,7 +79,7 @@ static struct miscdevice flash_dev = {
         .minor = MISC_DYNAMIC_MINOR,
         .name  = DRV_NAME,
         .fops  = &flash_fops,
-        .mode  = 0666               /* world R/W for easy testing           */
+        .mode  = 0666               /* world R/W for easy testing         */
 };
 
 /* -------------------------------------------------------------------- */
@@ -76,9 +89,9 @@ static int flash_usb_cb(struct notifier_block *nb,
                         unsigned long action, void *data)
 {
         if (action == USB_DEVICE_ADD)
-                pr_info("[%s] USB device plugged in\n", DRV_NAME);
+                pr_info("[%s] USB device plugged in", DRV_NAME);
         else if (action == USB_DEVICE_REMOVE)
-                pr_info("[%s] USB device removed\n", DRV_NAME);
+                pr_info("[%s] USB device removed", DRV_NAME);
 
         return NOTIFY_OK;
 }
@@ -96,12 +109,12 @@ static int __init flash_init(void)
 
         ret = misc_register(&flash_dev);
         if (ret) {
-                pr_err("[%s] misc_register failed: %d\n", DRV_NAME, ret);
+                pr_err("[%s] misc_register failed: %d", DRV_NAME, ret);
                 return ret;
         }
 
         usb_register_notify(&flash_nb);
-        pr_info("[%s] loaded – device /dev/%s ready\n", DRV_NAME, DRV_NAME);
+        pr_info("[%s] loaded – device /dev/%s ready", DRV_NAME, DRV_NAME);
         return 0;
 }
 
@@ -109,13 +122,13 @@ static void __exit flash_exit(void)
 {
         usb_unregister_notify(&flash_nb);
         misc_deregister(&flash_dev);
-        pr_info("[%s] unloaded\n", DRV_NAME);
+        pr_info("[%s] unloaded", DRV_NAME);
 }
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Your Name <you@example.com>");
 MODULE_DESCRIPTION("Kernel/user USB demo – CSC1107");
-MODULE_VERSION("1.1");
+MODULE_VERSION("1.2");
 
 module_init(flash_init);
 module_exit(flash_exit);
