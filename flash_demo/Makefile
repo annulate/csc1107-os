@@ -1,16 +1,23 @@
-obj-m := flash_demo.o
+# -------- kernel module build variables -------------------------------
+KDIR    ?= /lib/modules/$(shell uname -r)/build
+PWD     := $(shell pwd)
 
-KDIR ?= /lib/modules/$(shell uname -r)/build
-PWD  := $(shell pwd)
+obj-m   := flash_demo.o
 
-all: flash_demo.ko flash_helper
+# -------- default target ------------------------------------------------
+all: flash_demo.ko flash_cli
 
-flash_demo.ko:
+# Compile kernel module
+flash_demo.ko: flash_demo.c
 	$(MAKE) -C $(KDIR) M=$(PWD) modules
 
-flash_helper: flash_helper.c
-	$(CC) flash_helper.c -o flash_helper
+# Compile user program
+flash_cli: flash_cli.c
+	$(CC) -Wall -o $@ $<
 
+# -------- clean target --------------------------------------------------
 clean:
 	$(MAKE) -C $(KDIR) M=$(PWD) clean
-	rm -f flash_helper
+	$(RM) flash_cli
+
+.PHONY: all clean

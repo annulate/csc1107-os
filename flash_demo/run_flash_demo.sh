@@ -1,12 +1,24 @@
-#!/usr/bin/env bash
-
+#!/bin/bash
+# A one-click tester for flash_demo.
 set -e
-echo "[*] Building..."
-make -s
 
-echo "[*] Inserting kernel module..."
-sudo insmod flash_demo.ko || { echo "Module already loaded"; }
+# 1. Build everything
+make
 
-./flash_helper                            
-echo "Now plug in a USB stick to see the notifier messages in dmesg:"
-watch -n0.5 "dmesg | tail -n 30"
+# 2. Load the module
+sudo insmod flash_demo.ko
+
+# 3. Run the user program (writes then reads)
+./flash_cli
+
+# 4. Show the last few kernel messages
+echo "---- dmesg tail ----"
+dmesg | tail -n 15
+
+# 5 Read hot plugs
+read -rp "Plug in your USB flash drive now, then press Enter to continue-----------------"
+echo "---- new dmesg tail ----"
+dmesg | tail -n 15
+# 5. Unload and clean
+sudo rmmod flash_demo
+make clean
