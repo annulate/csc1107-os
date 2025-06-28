@@ -15,6 +15,7 @@ def checking_for_prime(usernum):
 try:
     usernum = int(input("Enter a number: "))
     checking_for_prime(usernum)
+    
 #To catch invalid input
 except ValueError:
     print("Please enter an integer!")
