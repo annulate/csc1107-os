@@ -1,3 +1,5 @@
+#Task 3.5a: FIFO Page Replacement Algorithm (Self-generated Python code)
+
 #Function to set page frame capacity
 def page_frame_capacity():
     while True:
