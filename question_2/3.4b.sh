@@ -1,4 +1,5 @@
 #!/bin/bash
+# Task 3.4b: Count and compress .txt files into mytxt.zip (GenAI-generated Bash Shell Script)
 
 # Ask the user for the desired zip file name
 read -p "Enter the name for the zip file (without the .zip extension): " zip_name

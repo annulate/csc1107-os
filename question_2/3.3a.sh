@@ -1,4 +1,5 @@
 #!/bin/bash
+# Task 3.3a: Two-sum problem from list (Self-developed Bash Shell Script)
 
 # Indexed array to store numbers
 list=()

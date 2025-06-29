@@ -1,3 +1,5 @@
+# Task 3.4d: Count and compress .txt files into mytxt.zip (GenAI-generated Python Code)
+
 import os
 import zipfile
 

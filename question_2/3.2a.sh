@@ -1,4 +1,5 @@
 #!/bin/bash
+# Task 3.2a: Find largest number (Self-developed Bash Shell Script)
 
 #Prompt to enter integers separated by spaces
 read -p "Enter numbers of the list separated by spaces:" -a num_list

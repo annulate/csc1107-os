@@ -1,4 +1,5 @@
 #!/bin/bash
+# Task 3.2b: Find largest number (GenAI-generated Bash Shell Script)
 
 # Prompt the user to enter a list of numbers
 echo "Enter a list of numbers separated by spaces:"

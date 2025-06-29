@@ -1,3 +1,5 @@
+# Task 3.4c: Count and compress .txt files into mytxt.zip (Self-developed Python Code)
+
 import os
 import zipfile
 

@@ -1,4 +1,4 @@
-# Task 3.1: Check user input for prime number (AI-generated)
+# Task 3.1d: Check user input for prime number (GenAI-generated Python code)
 
 def is_prime(n):
     if n <= 1:

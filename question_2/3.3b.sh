@@ -1,4 +1,5 @@
 #!/bin/bash
+# Task 3.3b: Two-sum problem from list (GenAI-generated Bash Shell Script)
 
 # Ask the user to input a list of numbers separated by spaces
 echo "Enter a list of numbers separated by spaces:"
