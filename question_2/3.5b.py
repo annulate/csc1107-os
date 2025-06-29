@@ -17,14 +17,14 @@ def fifo_page_replacement_genai():
 
     # Input: reference string
     while True:
-        reference_input = input("Enter the reference string (15–25 space-separated integers): ").strip()
-        reference_string = reference_input.split()
+        reference_input = input("Enter the reference string (15–25 comma-separated integers): ").strip()
+        reference_string = reference_input.split(',')
 
-        if all(i.isdigit() for i in reference_string) and 15 <= len(reference_string) <= 25:
-            reference_string = list(map(int, reference_string))
+        if all(i.strip().isdigit() for i in reference_string) and 15 <= len(reference_string) <= 25:
+            reference_string = list(map(int, [i.strip() for i in reference_string]))
             break
         else:
-            print("Invalid reference string. Ensure it contains 15–25 integers.")
+            print("Invalid reference string. Ensure it contains 15–25 integers separated by commas.")
 
     # FIFO Page Replacement logic
     page_frames = deque()
