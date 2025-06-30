@@ -21,6 +21,9 @@ def txt_files_counter(txt_files):
     
     else:
         print(f"Total number of '.txt' files in the zip: {num_txt_files}")
+        print(f"Printing list of .txt files")
+        for i in range(0, num_txt_files, 1):
+            print(f"{txt_files[i]}")
 
 def zip_files(txt_files, cwd):
 
