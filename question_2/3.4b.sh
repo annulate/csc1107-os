@@ -13,10 +13,10 @@ txt_files=(*.txt)
 # Count the number of .txt files
 txt_count=${#txt_files[@]}
 
-# Check if there are any .txt files
-if [ $txt_count -gt 0 ]; then
-    # Compress all .txt files into the user-provided zip file name
-    zip "$zip_name" "${txt_files[@]}"
+# Check if there are any .txt files and if they actually exist
+if [ $txt_count -gt 0 ] && [ -f "${txt_files[0]}" ]; then
+    # Use PowerShell to compress all .txt files (works in Git Bash on Windows)
+    powershell.exe -Command "Compress-Archive -Path '*.txt' -DestinationPath '$zip_name' -Force"
 
     # Print the result
     echo "There are $txt_count .txt files and compressed into $zip_name."
