@@ -5,7 +5,8 @@
 echo "test1" > file1.txt
 echo "test2" > file2.txt  
 echo "test3" > file3.txt
-echo "notes" > notes.txt
+echo "notes1" > notes1.txt
+echo "notes2" > notes2.txt
 
 # Get zip name from user
 read -p "Enter the name for the zip file (without the .zip extension): " name
