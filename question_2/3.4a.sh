@@ -24,9 +24,6 @@ done
 # Zip them up
 powershell.exe -Command "Compress-Archive -Path '*.txt' -DestinationPath '$name' -Force"
 
-# Remove the .txt files after zipping
-rm *.txt
-
 # Show result
 echo "There are $txt_count .txt files and compressed into $name file."
 echo "Original .txt files have been removed."
