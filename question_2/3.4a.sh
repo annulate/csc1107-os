@@ -26,4 +26,3 @@ powershell.exe -Command "Compress-Archive -Path '*.txt' -DestinationPath '$name'
 
 # Show result
 echo "There are $txt_count .txt files and compressed into $name file."
-echo "Original .txt files have been removed."
