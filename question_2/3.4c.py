@@ -3,9 +3,10 @@
 import os
 import zipfile
 
-
+# Simulate the creation of .txt files with contents
 def create_txt_files():
     
+    # Create a dictionary to link 5 different .txt file names and add values inside them
     files = {
         "file1.txt": "test1",
         "file2.txt": "test2",
@@ -14,6 +15,7 @@ def create_txt_files():
         "notes2.txt": "notes2"
     }
 
+    # Use a loop to create the 5 .txt files and add their values inside
     for filename, content in files.items():
         with open(filename, "w") as f:
             f.write(content + "\n")
