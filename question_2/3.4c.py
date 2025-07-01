@@ -3,6 +3,22 @@
 import os
 import zipfile
 
+
+def create_txt_files():
+    
+    files = {
+        "file1.txt": "test1",
+        "file2.txt": "test2",
+        "file3.txt": "test3",
+        "notes1.txt": "notes1",
+        "notes2.txt": "notes2"
+    }
+
+    for filename, content in files.items():
+        with open(filename, "w") as f:
+            f.write(content + "\n")
+
+
 def cwd():
     cwd = os.getcwd()
 
@@ -38,6 +54,7 @@ def zip_files(txt_files, cwd):
             zipf.write(file_path, arcname=txt_file)
 
 
+create_txt_files()
 cwd = cwd()
 txt_files = txt_files(cwd)
 txt_files_counter(txt_files)
