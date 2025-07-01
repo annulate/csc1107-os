@@ -3,6 +3,24 @@
 import os
 import zipfile
 
+# Simulate the creation of .txt files with contents
+def create_txt_files():
+    
+    # Create a dictionary to link 5 different .txt file names and add values inside them
+    files = {
+        "file1.txt": "test1",
+        "file2.txt": "test2",
+        "file3.txt": "test3",
+        "notes1.txt": "notes1",
+        "notes2.txt": "notes2"
+    }
+
+    # Use a loop to create the 5 .txt files and add their values inside
+    for filename, content in files.items():
+        with open(filename, "w") as f:
+            f.write(content + "\n")
+
+
 def cwd():
     cwd = os.getcwd()
 
@@ -21,6 +39,9 @@ def txt_files_counter(txt_files):
     
     else:
         print(f"Total number of '.txt' files in the zip: {num_txt_files}")
+        print(f"Printing list of .txt files")
+        for i in range(0, num_txt_files, 1):
+            print(f"{txt_files[i]}")
 
 def zip_files(txt_files, cwd):
 
@@ -35,6 +56,7 @@ def zip_files(txt_files, cwd):
             zipf.write(file_path, arcname=txt_file)
 
 
+create_txt_files()
 cwd = cwd()
 txt_files = txt_files(cwd)
 txt_files_counter(txt_files)
