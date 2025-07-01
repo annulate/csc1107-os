@@ -54,6 +54,8 @@ def zip_files(txt_files, cwd):
         for txt_file in txt_files:
             file_path = os.path.join(cwd, txt_file)
             zipf.write(file_path, arcname=txt_file)
+    num_text_files = len(txt_files)
+    print(f"There are number of {num_text_files} .txt files and compressed into a {zip_filename}.zip file.")
 
 
 create_txt_files()
