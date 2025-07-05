@@ -3,6 +3,26 @@
 import os
 import zipfile
 
+# Write "test1" to file1.txt
+with open("file1.txt", "w") as f:
+    f.write("test1\n")
+
+# Write "test2" to file2.txt
+with open("file2.txt", "w") as f:
+    f.write("test2\n")
+
+# Write "test3" to file3.txt
+with open("file3.txt", "w") as f:
+    f.write("test3\n")
+
+# Write "notes1" to notes1.txt
+with open("notes1.txt", "w") as f:
+    f.write("notes1\n")
+
+# Write "notes2" to notes2.txt
+with open("notes2.txt", "w") as f:
+    f.write("notes2\n")
+
 def compress_txt_files():
     # Ask the user for the desired zip file name (without extension)
     zip_name = input("Enter the name for the zip file (without the .zip extension): ")
