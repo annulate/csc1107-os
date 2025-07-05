@@ -42,6 +42,7 @@ def txt_files_counter(txt_files):
         print(f"Printing list of .txt files")
         for i in range(0, num_txt_files, 1):
             print(f"{txt_files[i]}")
+        print(f"There are number of {num_txt_files} .txt files and compressed into a .zip file.")
 
 def zip_files(txt_files, cwd):
 
@@ -54,12 +55,10 @@ def zip_files(txt_files, cwd):
         for txt_file in txt_files:
             file_path = os.path.join(cwd, txt_file)
             zipf.write(file_path, arcname=txt_file)
-    num_text_files = len(txt_files)
-    print(f"There are number of {num_text_files} .txt files and compressed into a {zip_filename}.zip file.")
 
 
 create_txt_files()
 cwd = cwd()
 txt_files = txt_files(cwd)
-txt_files_counter(txt_files)
 zip_files(txt_files,cwd)
+txt_files_counter(txt_files)
