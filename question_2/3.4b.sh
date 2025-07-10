@@ -9,7 +9,6 @@ echo "Meeting notes from today" > meeting_notes.txt
 echo "Project readme information" > readme.txt
 echo "Important todos and tasks" > todo.txt
 echo "Sample files created successfully."
-echo ""
 
 # Ask the user for the desired zip file name
 read -p "Enter the name for the zip file (without the .zip extension): " zip_name
