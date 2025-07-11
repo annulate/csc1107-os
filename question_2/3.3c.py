@@ -1,3 +1,4 @@
+# Task 3.3c: Two-sum problem from list (Self-developed Python Code)
 # Function to add numbers into a list separated by spacebar
 def add_to_list():
     while True:
@@ -10,7 +11,7 @@ def add_to_list():
             numlist = []
             for s in num_str:
                 numlist.append(int(s))
-                
+            
             print("Your list is: ", numlist)
             return numlist
         except ValueError:
